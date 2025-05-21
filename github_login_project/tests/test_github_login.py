@@ -1,43 +1,69 @@
 import os
-from selenium.webdriver.common.by import By
+import logging
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
 from dotenv import load_dotenv
 
+from pages.login_page import LoginPage
+
+from constants import GITHUB_DASHBOARD_URL
+
 load_dotenv()
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    handlers=[logging.StreamHandler()],
+)
+logger = logging.getLogger(__name__)
 
 
 def test_github_login(driver):
     """
-    Tests the GitHub login functionality.
+    Tests the GitHub login functionality using provided credentials and the LoginPage Page Object.
+
+    Steps:
+    1. Navigates to the GitHub login page.
+    2. Enters username and password.
+    3. Clicks the sign-in button.
+    4. Verifies redirection to the GitHub dashboard URL.
+
     Uses the 'driver' fixture for WebDriver management.
+    Credentials are loaded from environment variables.
     """
 
     github_username = os.getenv("GITHUB_USERNAME")
     github_password = os.getenv("GITHUB_PASSWORD")
 
-    driver.get("https://github.com/login")
+    if not (github_username and github_password):
+        raise ValueError("Missing GitHub credentials in .env file.")
 
-    username_field = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, '//*[@id="login_field"]'))
-    )
-    password_field = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, '//*[@id="password"]'))
-    )
+    logger.info(f"Attempting login for {github_username[:4]}")
 
-    username_field.send_keys(github_username)
-    password_field.send_keys(github_password)
+    login_page = LoginPage(driver, logger)
 
-    signin_button = driver.find_element(
-        By.XPATH, '//*[@id="login"]/div[4]/form/div/input[13]'
-    )
+    try:
+        login_page.login(github_username, github_password)
 
-    signin_button.click()
+        logger.info(f"Waiting for URL to become {GITHUB_DASHBOARD_URL}.")
+        WebDriverWait(driver, 15).until(EC.url_to_be(GITHUB_DASHBOARD_URL))
+        logger.info(f"Successfully redirected to {GITHUB_DASHBOARD_URL}.")
 
-    WebDriverWait(driver, 10).until(
-        lambda d: "login" not in d.current_url or "session" not in d.current_url
-    )
+        current_url = driver.current_url
+        assert current_url == GITHUB_DASHBOARD_URL, (
+            f"Login assertion failed: Expected URL to be {GITHUB_DASHBOARD_URL} "
+            f"but was {current_url}"
+        )
+        logger.info("Login test and URL assertion successful.")
 
-    current_url = driver.current_url
-    assert "login" not in current_url, f"Still on a login-related page: {current_url}"
-    assert "github.com" in current_url, f"Not on a github.com page: {current_url}"
+    except TimeoutException as e:
+        logger.error(f"A timeout occurred during the login process: {e}")
+        driver.save_screenshot("error_screenshot_login_test.png")
+        logger.info("Screenshot saved as error_screenshot_login_test.png")
+        raise
+    except Exception as e:
+        logger.error(f"An unexpected error occurred: {e}")
+        driver.save_screenshot("unexpected_error_login_test.png")
+        logger.info("Screenshot saved as unexpected_error_login_test.png")
+        raise
