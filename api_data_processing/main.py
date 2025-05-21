@@ -1,5 +1,4 @@
 import logging
-import json
 from src.api_client import APIClient
 from src.data_processor import DataProcessor
 
