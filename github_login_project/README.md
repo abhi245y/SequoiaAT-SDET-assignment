@@ -50,3 +50,7 @@ To execute the automated tests, navigate to the project root directory in your t
 ```bash
 pytest
 ```
+
+## Output
+
+![](https://github.com/abhi245y/SequoiaAT-SDET-assignment/blob/main/github_login_project/output.png)

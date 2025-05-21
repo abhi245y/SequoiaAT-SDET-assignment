@@ -62,3 +62,7 @@ To execute the script, navigate to the project root directory in your terminal a
 ```bash
 python main.py
 ```
+
+## Output
+
+![](https://github.com/abhi245y/SequoiaAT-SDET-assignment/blob/main/api_data_processing/output.png)
