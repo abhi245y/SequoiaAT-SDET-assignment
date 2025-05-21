@@ -24,7 +24,7 @@ class LoginPage:
         self.logger.info(f"Loading login page: {GITHUB_LOGIN_URL}")
         self.driver.get(GITHUB_LOGIN_URL)
 
-    def enter_login_credentials(self, username, password):
+    def enter_login_credentials(self, username: str, password: str):
         """Enters the login credentials into the username and password field."""
         self.logger.info("Waiting for username and password field to be clickable.")
 
@@ -45,7 +45,7 @@ class LoginPage:
         ).click()
         self.logger.info("Signing in...")
 
-    def login(self, username, password):
+    def login(self, username: str, password: str):
         """Performs a full login operation."""
         self.load()
         self.enter_login_credentials(username, password)
