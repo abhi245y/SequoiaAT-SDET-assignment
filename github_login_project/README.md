@@ -10,7 +10,7 @@ This project contains an automated UI test for the GitHub login functionality. I
 
 ## Setup
 
-1.  **Clone the repository.**
+1.  **Clone the repository ensure you are in the project's root directory (`github_login_project`).**
 
 2.  **Create a virtual environment (recommended):**
 

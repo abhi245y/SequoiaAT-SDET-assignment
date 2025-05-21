@@ -43,13 +43,6 @@ api_processing_project/
       ```
 
 3.  **Install dependencies:**
-    Ensure your `requirements.txt` file contains:
-
-    ```requests
-
-    ```
-
-    Then run:
 
     ```bash
     pip install -r requirements.txt
