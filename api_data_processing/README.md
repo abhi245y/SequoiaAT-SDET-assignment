@@ -4,6 +4,7 @@ This project demonstrates fetching, processing, and displaying data from the JSO
 
 ## Project Structure
 
+```
 api_processing_project/
 ├── src/
 │ ├── init.py
@@ -13,6 +14,7 @@ api_processing_project/
 ├── .gitignore
 ├── requirements.txt
 └── README.md
+```
 
 ## Prerequisites
 
@@ -42,10 +44,13 @@ api_processing_project/
 
 3.  **Install dependencies:**
     Ensure your `requirements.txt` file contains:
+
     ```requests
 
     ```
+
     Then run:
+
     ```bash
     pip install -r requirements.txt
     ```
